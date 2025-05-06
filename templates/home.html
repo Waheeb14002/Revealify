@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Revealify - Upload</title>
+  <link rel="stylesheet" href="/static/styles/home.css"/>
+</head>
+<body>
+
+  <div class="container">
+    <h1>📤 Revealify</h1>
+    <p style="font-size: large;">Convert your PowerPoint into beautiful Reveal.js slides</p>
+
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+      <label for="pptx_file" class="upload-box">
+        <input type="file" id="pptx_file" name="pptx_file" accept=".pptx" required />
+        Choose your .pptx file
+      </label>
+
+      <label for="theme_label" style="display: block; margin-top: 1em;">🎨 Choose a Reveal.js Theme:</label>
+      <select name="theme" id="theme_selector" required style="margin-bottom: 1em;">
+        <option value="dracula">🧛 Dracula</option>
+        <option value="black">🖤 Black</option>
+        <option value="white">🤍 White</option>
+        <option value="league">🏛 League</option>
+        <option value="beige">📄 Beige</option>
+        <option value="sky">🌤 Sky</option>
+        <option value="night">🌙 Night</option>
+        <option value="moon">🌕 Moon</option>
+        <option value="solarized">🌞 Solarized</option>
+        <option value="serif">🔠 Serif</option>
+        <option value="simple">🧾 Simple</option>
+        <option value="blood">🩸 Blood</option>
+      </select>
+
+      <button type="submit">Convert to Reveal.js</button>
+
+    </form>
+
+    <div id="file-feedback" class="file-feedback" style="display: none;">
+        <div class="file-info">
+            <p>
+                <span class="file-icon">📎</span> 
+                <span id="filename">filename.pptx</span> selected!
+            </p>
+        </div> 
+        <div class="cancel-wrapper">   
+            <button type="button" id="cancel-upload" class="cancel-btn" onclick="resetFileInput()">✖</button>
+        </div>
+    </div>
+
+    <div class="preview-box">
+      <p style="font-size: medium;">Your converted slides will open in the next view.</p>
+    </div>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById("pptx_file");
+    const feedback = document.getElementById("file-feedback");
+    const filenameSpan = document.getElementById("filename");
+
+    // Show feedback when file is selected
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files[0];
+      if (file) {
+        filenameSpan.textContent = file.name;
+        feedback.style.display = "flex";  // Modern UI alignment
+      } else {
+        feedback.style.display = "none";
+      }
+    });
+
+    // Reset file input + hide feedback box
+    function resetFileInput() {
+      fileInput.value = "";
+      feedback.style.display = "none";
+    }
+  </script>
+
+</body>
+</html>

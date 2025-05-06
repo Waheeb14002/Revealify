@@ -1,0 +1,66 @@
+/* 📄 Make tables clean and responsive */
+.reveal table {
+    width: 100%;               /* Stretch table to full slide width */
+    table-layout: auto;        /* Let columns size based on content */
+    font-size: 0.8em;          /* Slightly smaller to help fit */
+    border-collapse: collapse; /* Clean, no gaps */
+    margin: 1em 0;
+  }
+  
+  /* ✨ Add subtle column lines */
+  .reveal td, .reveal th {
+    border-right: 1px solid rgba(255, 255, 255, 0.15); /* only vertical borders */
+    padding: 0.5em;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+/* 🧾 Optional: center-align headers */
+.reveal th {
+    text-align: center;
+}
+  
+/* 🧼 Remove last border to avoid double line */
+.reveal tr td:last-child,
+.reveal tr th:last-child {
+    border-right: none;
+}
+  
+
+/* 📐 Stretch tables naturally */
+.stretch-table {
+    /*width: 100%;*/
+    table-layout: auto;
+    border-collapse: collapse;
+}
+  
+/* 💬 Allow cell content to grow but wrap gracefully */
+.stretch-table td {
+    padding: 0.6em;
+    text-align: left;
+    vertical-align: top;
+    word-wrap: break-word;
+    white-space: normal;  /* Allow multi-line text */
+}
+
+.stretch-table th {
+    padding: 0.6em;
+    text-align: center;           /*  center header text */
+    vertical-align: top;
+    word-wrap: break-word;
+    white-space: normal;
+}
+  
+/* ✅ Fix to ensure <th> really looks centered */
+.stretch-table th {
+    text-align: center !important; /* 🔥 Force center */
+    width: 1%;                     /* 🧠 Prevent uneven column growth */
+}
+  
+.reveal .slides {
+    overflow: visible !important;
+}
+  
+.reveal table, .reveal td, .reveal th {
+    font-size: 0.7em;  /* or adjust to 0.6em etc. */
+}

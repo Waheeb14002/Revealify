@@ -1,0 +1,234 @@
+body {
+    background-color: #1e1e2f;
+    color: #f0f0f0;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+  
+.container {
+    text-align: center;
+    max-width: 550px;
+    width: 100%;
+    padding: 20px;
+    margin: auto;
+}
+  
+h1 {
+    font-size: 2.2em;
+    margin-bottom: 0.3em;
+    color: #ffffff;
+}
+  
+p {
+    color: #cfcfcf;
+    margin-bottom: 1.5em;
+}
+  
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+  
+.upload-box {
+    background-color: #2a2a3a;
+    padding: 1em;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 2px dashed #444;
+    color: #aaa;
+    transition: background 0.3s;
+}
+  
+.upload-box:hover {
+    background-color: #33334d;
+}
+  
+.upload-box input[type="file"] {
+    display: none;
+}
+  
+button {
+    background-color: #3730a3;
+    color: white;
+    border: none;
+    padding: 0.8em;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+  
+button:hover {
+    background-color: #4f46e5;
+}
+  
+.preview-box {
+    margin-top: 2em;
+    font-size: 0.9em;
+    color: #888;
+}
+
+/* Feedback container with green stripe */
+.file-feedback {
+    margin-top: 1.5em;
+    position: relative;
+    background-color: #2c2c2c;
+    border-left: 5px solid #3df5a7;
+    border-radius: 12px;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    min-height: 80px;
+    transition: border-right 0.3s ease;
+}
+  
+/* Paperclip icon size */
+.file-icon {
+    font-size: 1.8rem;
+    margin-right: 10px;
+}
+  
+/* Cancel button in default (non-hovered) state */
+.cancel-btn {
+    background-color: transparent;
+    color: #b83030;
+    border: none;
+    font-size: 1.5rem;
+    padding: 0;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-in-out;
+    width: 48px;
+    height: 48px;
+    line-height: 1;
+    z-index: 1;
+    position: relative;
+    /* ✅ Added these to cancel browser-native focus/press styles */
+    outline: none;
+    box-shadow: none;
+    -webkit-tap-highlight-color: transparent;
+}
+  
+/* Right-side red stripe with full hover area */
+.cancel-wrapper {
+    width: 48px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+}
+  
+/* Hover effect: red stripe and white X */
+.cancel-wrapper:hover {
+    background-color: #ff4f4f;
+}
+
+.cancel-btn:hover {
+    background-color: #ff4f4f;
+}
+  
+.cancel-wrapper:hover .cancel-btn {
+    color: white;
+}
+  
+/* Show red border stripe on hover */
+.file-feedback:has(.cancel-wrapper:hover) {
+    border-right: 5px solid #ff4f4f;
+}
+  
+/* 📎 file icon + filename side-by-side */
+.file-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+  
+/* Make sure text doesn’t shift on hover */
+.file-feedback {
+    justify-content: space-between;
+    align-items: center;
+}
+  
+.cancel-btn:focus,
+.cancel-btn:focus-visible,
+.cancel-btn:active {
+  outline: none; /* removes the blue outline */
+  background-color: transparent; /* prevents browser default blue bg */
+  box-shadow: none;
+}
+
+
+/* 🎨 Modern dark dropdown for theme selector */
+select#theme_selector {
+    background-color: #1e1e2f;
+    color: white;
+    border: 1px solid #444;
+    padding: 0.6em 1em;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 100%;
+    appearance: none; /* remove default arrow in some browsers */
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='10' height='10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='white' d='M0 0l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1em top 50%;
+    background-size: 0.65em auto;
+    transition: border 0.2s ease, background-color 0.2s ease;
+}
+  
+/* Hover/focus effect */
+select#theme_selector:hover,
+select#theme_selector:focus {
+    border-color: #7758d1;
+    outline: none;
+    background-color: #2a2a3f;
+}
+
+/* Reset stuck hover state after click */
+select#theme_selector:active {
+    background-color: #1e1e2f;
+}
+
+/* 🛠 Prevent hover color from sticking after selection */
+select#theme_selector:focus:not(:hover) {
+    background-color: #1e1e2f; /* Reset to normal background */
+    border-color: #444;        /* Reset border too if needed */
+}
+
+/* Label styling */
+label[for="theme_label"] {
+    color: #eee;
+    font-weight: 600;
+    margin-bottom: 0.75em;
+    display: block;
+    font-size: 1.2rem;   /* ⬆️ slightly larger */
+  }
+
+/* Smooth animation and scale effect on theme selector */ 
+select#theme_selector {
+    transition: all 0.3s ease; /* Applies smooth transition to all animatable properties (like scale, shadow) */
+    transform-origin: center; /* Makes the scaling expand from the center (not left or right) */
+}
+  
+select#theme_selector:focus {
+    transform: scale(1.02);  /* Slightly enlarges the select box when focused (for a dynamic UI feel) */
+    box-shadow: 0 0 0 2px rgba(119, 88, 209, 0.5); /* Adds a soft purple outline/glow on focus */
+}
+  

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Revealify</title>
+  <!-- REVEAL CSS -->
+  <link rel="stylesheet" href="/static/reveal.js/dist/reveal.css" />
+  <link rel="stylesheet" href="/static/reveal.js/dist/theme/dracula.css" />
+  <link rel="stylesheet" href="/static/styles/view.css"/> 
+
+</head>
+<body>
+
+  <div class="reveal">
+    <div class="slides" id="slides-container">
+      <!-- Slides will be loaded here dynamically -->
+    </div>
+  </div>
+
+  <!-- REVEAL JS (as module) -->
+  <script type="module">
+    import Reveal from "/static/reveal.js/dist/reveal.esm.js";
+    import RevealNotes from "/static/reveal.js/plugin/notes/notes.esm.js";
+    
+    fetch("/static/slides.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("slides-container").innerHTML = html;
+        const deck = new Reveal();
+        deck.initialize({
+            slideNumber: 'c/t',
+            scrollOverflow: true,
+            plugins: [ RevealNotes ]  // ✅ Enable speaker notes plugin
+        });
+      });
+  </script>
+
+</body>
+</html>

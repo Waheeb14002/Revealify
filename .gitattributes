@@ -1,0 +1,6 @@
+
+# Exclude Reveal.js from GitHub language stats (mark as vendor dependency)
+# This tells GitHub: This entire Reveal.js folder is a vendored dependency — don’t count it in the language analysis
+static/reveal.js/* linguist-vendored
+
+# "Trigger GitHub linguist reindexing"

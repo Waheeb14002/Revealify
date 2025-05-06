@@ -1,0 +1,22 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Python output
+slides.html
+
+# Python script used before flask app
+run.py
+
+# Node
+node_modules/
+
+# VS Code settings 
+#.vscode/
+
+# PowerPoint test files
+*.pptx
+
+out.txt
+systemFlow.txt
