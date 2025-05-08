@@ -66,19 +66,32 @@ class ParagraphContent(SlideContent):
     """
     Represents a plain paragraph block.
     """
-    def __init__(self, text):
-        self.text = text
+    def __init__(self, runs):
+        self.runs = runs
 
     def to_html(self):
-        return f"  <p class='fragment'>{self.text}</p>"
+        html = "  <p class='fragment'>"
+        for run in self.runs:
+            text = run["text"]
+            if run.get("bold"):
+                text = f"<strong>{text}</strong>"
+            if run.get("italic"):
+                text = f"<em>{text}</em>"
+            if run.get("underline"):
+                text = f"<u>{text}</u>"
+            if run.get("strikethrough"):
+                text = f"<span style='text-decoration: line-through;'>{text}</span>"
+            html += text
+        html += "</p>"
+        return html
 
 
 class BulletNode(SlideContent):
     """
     Represents a bullet point.
     """
-    def __init__(self, text, level, ordered=False):
-        self.text = text
+    def __init__(self, runs, level, ordered=False):
+        self.runs = runs
         self.level = level
         self.ordered = ordered
         self.children = []
@@ -87,7 +100,19 @@ class BulletNode(SlideContent):
         self.children.append(node)
 
     def to_html(self):
-        html = f"<li class='fragment'>{self.text}"
+        html = "<li class='fragment'>"
+        for run in self.runs:
+            text = run["text"]
+            if run.get("bold"):
+                text = f"<strong>{text}</strong>"
+            if run.get("italic"):
+                text = f"<em>{text}</em>"
+            if run.get("underline"):
+                text = f"<u>{text}</u>"
+            if run.get("strikethrough"):
+                text = f"<span style='text-decoration: line-through;'>{text}</span>"
+            html += text
+            
         if self.children:
             tag = "ol" if self.ordered else "ul"
             html += f"<{tag}>"

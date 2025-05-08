@@ -72,10 +72,28 @@ class XmlParser:
                               shape.find('.//p:nvPr/p:ph', ns).attrib.get('type') == "subTitle"
 
                 for paragraph in shape.findall('.//a:p', ns):
-                    text = ""
-                    for t in paragraph.findall('.//a:t', ns):
-                        text += t.text or ""
+                    runs = []
+                    for r in paragraph.findall('a:r', ns):
+                        rpr = r.find('a:rPr', ns)
+                        text_elem = r.find('a:t', ns)
+                        if text_elem is None:
+                            continue
+                        text = text_elem.text or ""
+                        bold = rpr is not None and rpr.attrib.get("b") == "1"
+                        italic = rpr is not None and rpr.attrib.get("i") == "1"
+                        underline = rpr is not None and rpr.attrib.get("u") in ["sng", "dbl"]
+                        strike = rpr is not None and rpr.attrib.get("strike") in ["sng", "dbl"]
 
+                        runs.append({
+                            "text": text,
+                            "bold": bold,
+                            "italic": italic,
+                            "underline": underline,
+                            "strikethrough": strike
+                        })
+
+                    # Reconstruct the plain string for logic/grouping
+                    text = "".join(run["text"] for run in runs)
                     if not text.strip():
                         continue
 
@@ -84,6 +102,7 @@ class XmlParser:
 
                     shapes.append({
                         "text": text.strip(),
+                        "runs": runs,
                         "level": level,
                         "bullet_type": bullet_type,
                         "title": is_title,
