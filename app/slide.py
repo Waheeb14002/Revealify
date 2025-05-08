@@ -15,8 +15,8 @@ class HTMLSlide:
     Represents one full Reveal.js slide.
     Contains a title and ordered list of content blocks.
     """
-    def __init__(self, title="", transition="fade"):
-        self.title = title
+    def __init__(self, title_runs="", transition="fade"):
+        self.title_runs = title_runs or []
         self.transition = transition
         self.contents = []
 
@@ -37,10 +37,22 @@ class HTMLSlide:
         if has_non_table:
             html += '<div class="r-fit-text">\n'
 
-        if self.title:
+        if self.title_runs:
             # If table exists, make title smaller automatically (use h3 or h4)
             title_tag = "h4" if has_table else "h2"
-            html += f"  <{title_tag}>{self.title}</{title_tag}>\n"
+            html += f"  <{title_tag}>"
+            for run in self.title_runs:
+                text = run["text"]
+                if run.get("bold"):
+                    text = f"<strong>{text}</strong>"
+                if run.get("italic"):
+                    text = f"<em>{text}</em>"
+                if run.get("underline"):
+                    text = f"<u>{text}</u>"
+                if run.get("strikethrough"):
+                    text = f"<span style='text-decoration: line-through;'>{text}</span>"
+                html += text
+            html += f"</{title_tag}>\n"
 
         # Handle contents differently, cus we put scroller for tables
         for content in self.contents:
@@ -112,7 +124,7 @@ class BulletNode(SlideContent):
             if run.get("strikethrough"):
                 text = f"<span style='text-decoration: line-through;'>{text}</span>"
             html += text
-            
+
         if self.children:
             tag = "ol" if self.ordered else "ul"
             html += f"<{tag}>"
