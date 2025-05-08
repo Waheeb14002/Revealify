@@ -74,7 +74,7 @@ class SlideConverter:
                 root = BulletNode("ROOT", -1, ordered) # dummy root to hold top level bullets
                 stack = [root]
                 for item in buffer:
-                    node = BulletNode(item["text"], item["level"], ordered)
+                    node = BulletNode(item["runs"], item["level"], ordered)
                     while stack and stack[-1].level >= node.level:
                         stack.pop()
                     stack[-1].add_child(node)
@@ -82,7 +82,7 @@ class SlideConverter:
                 contents.append(BulletTreeContent(root))
             elif last_type == "paragraph":
                 for item in buffer:
-                    contents.append(ParagraphContent(item["text"]))
+                    contents.append(ParagraphContent(item["runs"]))
             buffer.clear()
 
         # Process all items from XML
@@ -101,24 +101,30 @@ class SlideConverter:
                 continue # skip rest of this loop
 
             # 🔁 Handle textual content (paragraphs/bullets)
-            text = item["text"]
-            bullet_type = item["bullet_type"]
-            level = item["level"]
+            elif item["type"] == "text":
 
-            if bullet_type == "number":
-                current_type = "numbered"
-            elif bullet_type == "bullet":
-                current_type = "bullet"
-            else:
-                current_type = "paragraph"
+                bullet_type = item["bullet_type"]
 
-            if last_type is None or current_type == last_type:
-                buffer.append(item)
-                last_type = current_type
-            else:
-                flush_buffer()
-                buffer = [item]
-                last_type = current_type
+                if bullet_type == "number":
+                    current_type = "numbered"
+                elif bullet_type == "bullet":
+                    current_type = "bullet"
+                else:
+                    current_type = "paragraph"
+
+                if last_type is None or current_type == last_type:
+                    buffer.append({
+                        "text": item["text"],
+                        "runs": item.get("runs", []),
+                        "level": item["level"]
+                    })
+                    last_type = current_type
+                else:
+                    flush_buffer()
+                    buffer = [item]
+                    last_type = current_type
+            else: # unsupported types yet to come
+                pass
 
         flush_buffer()  # Final flush at end
 
