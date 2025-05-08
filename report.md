@@ -9,16 +9,17 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ## ✅ Features
 
-| Feature                                | Status       |
-|----------------------------------------|--------------|
-| ✅ Full web application (Flask)         | Implemented  |
-| ✅ Modern Flask web UI                 | Implemented  |
-| ✅ Slide titles & text parsing         | Implemented  |
-| ✅ Bullet points + nesting             | Implemented  |
-| ✅ Fragments (click-to-reveal)          | Implemented  |
-| ✅ Table content support (text only)    | Implemented  |
-| ✅ Upload and convert `.pptx`           | Implemented  |
-| ✅ Theme selector (Reveal.js)           | Implemented  |
+| Feature                                  | Status       |
+|------------------------------------------|--------------|
+| ✅ Full web application (Flask)           | Implemented  |
+| ✅ Modern Flask web UI                   | Implemented  |
+| ✅ Slide titles & text parsing           | Implemented  |
+| ✅ Bullet points + nesting               | Implemented  |
+| ✅ Fragments (click-to-reveal)            | Implemented  |
+| ✅ Table content support (text only)      | Implemented  |
+| ✅ Upload and convert `.pptx`             | Implemented  |
+| ✅ Theme selector (Reveal.js)             | Implemented  |
+| ✅ Styled inline text (bold, italic, underline, strikethrough) | Implemented  |
 
 
 ## 🗓 Project Timeline & Progress Log
@@ -97,9 +98,9 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ---
 
-### Week 4 — 📊 Table Support & Final Reveal.js Styling (Apr 21–Apr 28)
+### Week 5 — 📊 Table Support & Final Reveal.js Styling (Apr 21–Apr 28)
 
-**Hours Logged:** ~20 hours (so far up to Apr 27)
+**Hours Logged:** ~20 hours
 
 - Extended the XML parser to support tables using `graphicFrame` + `<a:tbl>`  
 - Maintained slide content ordering to include both paragraphs and tables without breaking sequence  
@@ -117,11 +118,24 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 - Refined scrolling behavior for wide tables with overflow-x/overflow-y: auto inside slides
 
 > **Heavy UI trial-and-error and testing** contributed to ~20 hours of focused work across multiple debugging sessions.
+---
 
+### Week 6 — ✨ Rich Text Styling & Table Dimension Precision (Apr 29–May 5)
+
+**Hours Logged:** ~8 hours
+
+- Added support for **precise table positioning and dimensions**, including `x`, `y`, `width`, and `height` in percentage of slide size  
+- Extracted and applied **column widths** from `<a:tblGrid>` for more faithful Reveal.js table rendering  
+- Enhanced the `XmlParser` to output detailed table shape geometry using EMUs-to-percent conversion logic  
+- Introduced support for **styled inline text** inside paragraphs and bullets by parsing `<a:r>` and `<a:rPr>`  
+- Supported rich formatting: **bold**, *italic*, <u>underline</u>, and <span style="text-decoration:line-through;">strikethrough</span> using HTML equivalents (`<strong>`, `<em>`, `<u>`, `<span>`)  
+- Updated `ParagraphContent` and `BulletNode` to render styled `runs` inline without breaking text flow  
+- Ensured full compatibility with existing bullet nesting and paragraph grouping logic  
+- Cleaned up item dispatching logic in `converter.py` to only process `"text"` and `"table"` types, skipping unhandled shapes safely  
 
 ---
 
-## 📅 Daily Breakdown Summary (Mar 24–Apr 28)
+## 📅 Daily Breakdown Summary (Mar 24–May 05)
 
 > Estimated average: ~5-6 hours/day, increasing toward the later stages
 
