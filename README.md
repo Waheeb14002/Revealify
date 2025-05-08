@@ -6,16 +6,17 @@ This project converts `.pptx` PowerPoint slides into [Reveal.js](https://revealj
 
 ## ✅ Features
 
-| Feature                                | Status       |
-|----------------------------------------|--------------|
-| ✅ Full web application (Flask)         | Implemented  |
-| ✅ Modern Flask web UI                 | Implemented  |
-| ✅ Slide titles & text parsing         | Implemented  |
-| ✅ Bullet points + nesting             | Implemented  |
-| ✅ Fragments (click-to-reveal)          | Implemented  |
-| ✅ Table content support (text only)    | Implemented  |
-| ✅ Upload and convert `.pptx`           | Implemented  |
-| ✅ Theme selector (Reveal.js)           | Implemented  |
+| Feature                                  | Status       |
+|------------------------------------------|--------------|
+| ✅ Full web application (Flask)           | Implemented  |
+| ✅ Modern Flask web UI                   | Implemented  |
+| ✅ Slide titles & text parsing           | Implemented  |
+| ✅ Bullet points + nesting               | Implemented  |
+| ✅ Fragments (click-to-reveal)            | Implemented  |
+| ✅ Table content support (text only)      | Implemented  |
+| ✅ Upload and convert `.pptx`             | Implemented  |
+| ✅ Theme selector (Reveal.js)             | Implemented  |
+| ✅ Styled inline text (bold, italic, underline, strikethrough) | Implemented  |
 
 
 ## 📂 Example PowerPoint File
@@ -110,19 +111,21 @@ You can also run Revealify without using Flask at all:
 
 1. Open a terminal in your project root.
 
-2. Run the converter manually to generate `slides.html`:
+2. Add your `.pptx` file to the project root directory, and adjust the input path in `run.py` if needed.
+
+3. Run the converter to generate `slides.html`:
 
 ```bash
 python run.py
 ```
 
-3. Start a simple HTTP server:
+4. Start a simple HTTP server with auto-open tab support:
 
 ```bash
 npx http-server 
 ```
 
-4. Then open your browser and navigate to:
+5. Your browser will automatically open and navigate to:
 
 ```
 http://localhost:8081
