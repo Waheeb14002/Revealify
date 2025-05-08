@@ -6,17 +6,16 @@ This project converts `.pptx` PowerPoint slides into [Reveal.js](https://revealj
 
 ## ✅ Features
 
-| Feature                                  | Status       |
-|------------------------------------------|--------------|
-| ✅ Full web application (Flask)           | Implemented  |
-| ✅ Modern Flask web UI                   | Implemented  |
-| ✅ Slide titles & text parsing           | Implemented  |
-| ✅ Bullet points + nesting               | Implemented  |
-| ✅ Fragments (click-to-reveal)            | Implemented  |
-| ✅ Table content support (text only)      | Implemented  |
-| ✅ Upload and convert `.pptx`             | Implemented  |
-| ✅ Theme selector (Reveal.js)             | Implemented  |
-| ✅ Styled inline text (bold, italic, underline, strikethrough) | Implemented  |
+| Feature                                                               | Status       |
+|-----------------------------------------------------------------------|--------------|
+| ✅ Full web application (Flask)                                      | Implemented  |
+| ✅ Modern Flask web UI with Theme selector (Reveal.js)               | Implemented  |
+| ✅ Upload and convert `.pptx`                                        | Implemented  |
+| ✅ Fragments (click-to-reveal)                                       | Implemented  |
+| ✅ Slide titles & text parsing                                       | Implemented  |
+| ✅ Bullet points + nesting                                           | Implemented  |
+| ✅ Table content support (text only)                                 | Implemented  |
+| ✅ Styled inline text (bold, italic, underline, strikethrough)       | Implemented  |
 
 
 ## 📂 Example PowerPoint File
@@ -122,7 +121,7 @@ python run.py
 4. Start a simple HTTP server with auto-open tab support:
 
 ```bash
-npx http-server 
+npx http-server -o
 ```
 
 5. Your browser will automatically open and navigate to:

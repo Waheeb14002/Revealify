@@ -53,12 +53,12 @@ class SlideConverter:
         group and convert it into HTML content using Reveal.js structure.
         """
 
-        title = ""
+        title_runs = ""
         contents = []
 
         # Get the title from parsed XML data
         if shapes_data and shapes_data[0].get("title", False):
-            title = shapes_data[0]["text"]
+            title_runs = shapes_data[0]["runs"]
             shapes_data = shapes_data[1:] # remove it from body content    
 
         # Group and convert content with buffer + flush method
@@ -128,7 +128,7 @@ class SlideConverter:
 
         flush_buffer()  # Final flush at end
 
-        slide = HTMLSlide(title=title, transition="fade")
+        slide = HTMLSlide(title_runs=title_runs, transition="fade")
         for content in contents:
             slide.add_content(content)
         return slide
