@@ -15,6 +15,7 @@ class XmlParser:
             'r': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
         }
         self.slide_data = {}  # Maps slide index (0, 1, ...) → list of parsed shape info
+        self.slide_links = {}
         self._parse_pptx()
 
     def _parse_pptx(self):
@@ -46,14 +47,35 @@ class XmlParser:
             # Step 3: Map correct slide order
             ordered_slide_files = [f"ppt/{rId_to_target[rid]}" for rid in rId_order if rid in rId_to_target]
 
-            # Step 4: Parse slides in correct order and store data
+            # Step 4: Load hyperlinks from .rels files for each slide
+            for idx, fname in enumerate(ordered_slide_files):
+                rels_path = fname.replace("slides/", "slides/_rels/") + ".rels"
+                links = {}
+                try:
+                    with zipf.open(rels_path) as rels_file:
+                        rels_root = ET.parse(rels_file).getroot()
+                        for rel in rels_root:
+                            if rel.attrib.get("Type", "").endswith("/hyperlink"):
+                                rId = rel.attrib["Id"]
+                                target = rel.attrib["Target"]
+                                links[rId] = target
+                except KeyError:
+                    raise RuntimeError("Error in Hyperlinks mapping\n")  # no .rels file for this slide
+                self.slide_links[idx] = links
+                """
+                the above step builds a per-slide mapping like:
+                self.slide_links[12] = {"rId2": "mailto:someone@example.com", "rId3": "https://google.com"}
+
+                """
+
+            # Step 5: Parse slides in correct order and store data
             for idx, fname in enumerate(ordered_slide_files):
                 with zipf.open(fname) as file:
                     xml_content = file.read()
-                    self.slide_data[idx] = self._parse_slide(xml_content)
+                    self.slide_data[idx] = self._parse_slide(xml_content,idx)
 
 
-    def _parse_slide(self, xml_content):
+    def _parse_slide(self, xml_content, slide_index):
         """
         Parses a single slide and returns a list of shapes (paragraphs or tables) in order.
         """
@@ -84,12 +106,29 @@ class XmlParser:
                         underline = rpr is not None and rpr.attrib.get("u") in ["sng", "dbl"]
                         strike = rpr is not None and rpr.attrib.get("strike") in ["sng", "dbl"]
 
+                        hlink = rpr.find('a:hlinkClick', ns)
+                        r_id = hlink.attrib.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id') if hlink is not None else None
+                        hyperlink = self.slide_links.get(slide_index, {}).get(r_id)
+
+                        if hyperlink:
+                            if hyperlink.startswith("mailto:"):
+                                hyperlink_type = "email"
+                            elif hyperlink.startswith("http://") or hyperlink.startswith("https://"):
+                                hyperlink_type = "web"
+                            else:
+                                hyperlink_type = "other"
+                        else:
+                            hyperlink_type = None
+
+
                         runs.append({
                             "text": text,
                             "bold": bold,
                             "italic": italic,
                             "underline": underline,
-                            "strikethrough": strike
+                            "strikethrough": strike,
+                            "hyperlink": hyperlink,
+                            "hyperlink_type": hyperlink_type
                         })
 
                     # Reconstruct the plain string for logic/grouping
