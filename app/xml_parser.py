@@ -135,6 +135,15 @@ class XmlParser:
                     text = "".join(run["text"] for run in runs)
                     if not text.strip():
                         continue
+                    # Get text alignment
+                    alignment = 'left' # as PP default
+                    pPr = paragraph.find('a:pPr',ns)
+                    if pPr is not None and "algn" in pPr.attrib:
+                        algn = pPr.attrib["algn"]
+                        if algn == "ctr":
+                            alignment = "center"
+                        elif algn == "r":
+                            alignment = "right"
 
                     bullet_type = None if is_title or is_subtitle else self._get_bullet_type(paragraph)
                     level = self._get_level(paragraph, bullet_type)
@@ -145,7 +154,8 @@ class XmlParser:
                         "level": level,
                         "bullet_type": bullet_type,
                         "title": is_title,
-                        "type": "text"
+                        "type": "text",
+                        "alignment": alignment
                     })
 
             # table data extract
