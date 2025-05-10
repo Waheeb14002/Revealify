@@ -64,3 +64,13 @@
 .reveal table, .reveal td, .reveal th {
     font-size: 0.7em;  /* or adjust to 0.6em etc. */
 }
+/************************* text related *********************************/
+
+/*
+    This allows inner <p style="text-align:xxxx;"> 
+    to control alignment fully.
+*/
+.r-fit-text { 
+    text-align: inherit !important;
+}
+  

@@ -74,7 +74,7 @@ class SlideConverter:
                 root = BulletNode("ROOT", -1, ordered) # dummy root to hold top level bullets
                 stack = [root]
                 for item in buffer:
-                    node = BulletNode(item["runs"], item["level"], ordered)
+                    node = BulletNode(item["runs"], item["level"], ordered, item["alignment"])
                     while stack and stack[-1].level >= node.level:
                         stack.pop()
                     stack[-1].add_child(node)
@@ -82,7 +82,7 @@ class SlideConverter:
                 contents.append(BulletTreeContent(root))
             elif last_type == "paragraph":
                 for item in buffer:
-                    contents.append(ParagraphContent(item["runs"]))
+                    contents.append(ParagraphContent(item["runs"], item["alignment"]))
             buffer.clear()
 
         # Process all items from XML
@@ -116,12 +116,18 @@ class SlideConverter:
                     buffer.append({
                         "text": item["text"],
                         "runs": item.get("runs", []),
-                        "level": item["level"]
+                        "level": item["level"],
+                        "alignment": item.get("alignment", "left")
                     })
                     last_type = current_type
                 else:
                     flush_buffer()
-                    buffer = [item]
+                    buffer = [{
+                        "text": item["text"],
+                        "runs": item.get("runs", []),
+                        "level": item["level"],
+                        "alignment": item.get("alignment", "left")
+                    }]
                     last_type = current_type
             else: # unsupported types yet to come
                 pass

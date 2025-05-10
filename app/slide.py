@@ -83,11 +83,12 @@ class ParagraphContent(SlideContent):
     """
     Represents a plain paragraph block.
     """
-    def __init__(self, runs):
+    def __init__(self, runs, alignment="left"):
         self.runs = runs
+        self.alignment = alignment
 
     def to_html(self):
-        html = "  <p class='fragment'>"
+        html = f"  <p class='fragment' style='text-align:{self.alignment};'>"
         for run in self.runs:
             text = run["text"]
             # Wrap with link if hyperlink is present
@@ -112,17 +113,18 @@ class BulletNode(SlideContent):
     """
     Represents a bullet point.
     """
-    def __init__(self, runs, level, ordered=False):
+    def __init__(self, runs, level, ordered=False, alignment="left"):
         self.runs = runs
         self.level = level
         self.ordered = ordered
         self.children = []
+        self.alignment = alignment
 
     def add_child(self, node):
         self.children.append(node)
 
     def to_html(self):
-        html = "<li class='fragment'>"
+        html = f"<li class='fragment' style='text-align:{self.alignment};'>"
         for run in self.runs:
             text = run["text"]
             # Wrap with link if hyperlink is present
