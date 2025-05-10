@@ -43,6 +43,11 @@ class HTMLSlide:
             html += f"  <{title_tag}>"
             for run in self.title_runs:
                 text = run["text"]
+                # Wrap with link if hyperlink is present
+                if run.get("hyperlink"):
+                    url = run["hyperlink"]
+                    text = f"<a href='{url}' target='_blank'>{text}</a>"
+                # Apply styling
                 if run.get("bold"):
                     text = f"<strong>{text}</strong>"
                 if run.get("italic"):
@@ -85,6 +90,11 @@ class ParagraphContent(SlideContent):
         html = "  <p class='fragment'>"
         for run in self.runs:
             text = run["text"]
+            # Wrap with link if hyperlink is present
+            if run.get("hyperlink"):
+                url = run["hyperlink"]
+                text = f"<a href='{url}' target='_blank'>{text}</a>"
+            # Apply styling
             if run.get("bold"):
                 text = f"<strong>{text}</strong>"
             if run.get("italic"):
@@ -115,6 +125,11 @@ class BulletNode(SlideContent):
         html = "<li class='fragment'>"
         for run in self.runs:
             text = run["text"]
+            # Wrap with link if hyperlink is present
+            if run.get("hyperlink"):
+                url = run["hyperlink"]
+                text = f"<a href='{url}' target='_blank'>{text}</a>"
+            # Apply styling
             if run.get("bold"):
                 text = f"<strong>{text}</strong>"
             if run.get("italic"):
