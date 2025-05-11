@@ -221,17 +221,23 @@ All Reveal.js files are already included under:
 
 ```
 project/
-├── app/                    # Conversion logic (Python classes)
+├── app/                      # Core conversion logic (Python classes: parsing, slide building)
+│   ├── converter.py
+│   ├── xml_parser.py
+│   └── slide.py
 ├── static/
-│   └── reveal.js/          # Reveal.js static assets (copied)
-│   └── styles/             # Custom CSS for web UI
+│   └── reveal.js/            # Reveal.js framework files (copied from official repo)
+│   └── styles/               # Custom CSS (e.g. view.css) for slides & layout
 ├── templates/
-│   ├── home.html           # Upload UI
-│   └── index.html          # Reveal.js player
-├── uploads/                # Temporary uploaded .pptx files
-├── app.py                  # Flask entry point
+│   ├── home.html             # Upload form (Flask web UI)
+│   └── index.html            # Reveal.js viewer (used by Flask)
+├── uploads/                  # Temporary storage for uploaded .pptx files (Flask only)
+├── run.py                    # ✅ Standalone mode: converts PPTX to Reveal.js
+├── index.html                # ✅ Output Reveal.js file for standalone mode (generated)
+├── app.py                    # Flask app entry point
 ├── requirements.txt
 └── README.md
+
 ```
 
 ---
