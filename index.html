@@ -23,6 +23,35 @@
     import Reveal from "/static/reveal.js/dist/reveal.esm.js";
     import RevealNotes from "/static/reveal.js/plugin/notes/notes.esm.js";
     
+   function fitTextToBox(element) {
+    let computedStyle = window.getComputedStyle(element);
+    let size = parseFloat(computedStyle.fontSize) || 24;
+    let originalSize = size;
+    // Set min font size based on type
+    let minPx = element.classList.contains('title-shape') ? 20 : 16;
+    //element.style.fontSize = size + "px";
+    let attempts = 0;
+
+    // Only shrink if content doesn't fit
+    if (element.scrollHeight > element.offsetHeight || element.scrollWidth > element.offsetWidth) {
+      while ((element.scrollHeight > element.offsetHeight || element.scrollWidth > element.offsetWidth) && size > minPx) {
+        size -= 1;
+        element.style.fontSize = size + "px";
+        attempts++;
+      }
+    }
+    // Log info
+    console.log(
+      `fitTextToBox:`, 
+      element.className, 
+      `→ final font-size: ${size}px (min: ${minPx}px, started at ${originalSize}px, attempts: ${attempts})`
+    );
+  }
+    
+    function fitAllTextShapes() {
+      document.querySelectorAll('.text-shape, .title-shape').forEach(el => fitTextToBox(el));
+    }
+    
     fetch("/static/slides.html")
       .then(res => res.text())
       .then(html => {
@@ -31,10 +60,16 @@
         deck.initialize({
             slideNumber: 'c/t',
             scrollOverflow: true,
+            disableLayout: false,
             plugins: [ RevealNotes ]  // ✅ Enable speaker notes plugin
         });
+
+        // Run after Reveal is fully loaded
+        deck.on('ready', fitAllTextShapes);
+
+        // On every slide change
+        deck.on('slidechanged', fitAllTextShapes);
       });
   </script>
-
 </body>
 </html>

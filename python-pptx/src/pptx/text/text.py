@@ -296,7 +296,20 @@ class Font(object):
         setting, or a setting in a style or master. Returns None if no bold attribute is present,
         meaning the effective bold value is inherited from a master or the theme.
         """
-        return self._rPr.b
+        # og func code: return self._rPr.b
+        """ 
+        we gonna make hybrid behavior where if computed way fails,
+        it falls back to raeding raw xml manually
+        """
+        inherited = self._rPr.b
+        if inherited is not None:
+            return inherited
+        raw_val = self._rPr.get("b")
+        if raw_val == "1":
+            return True
+        elif raw_val == "0":
+            return False
+        return None
 
     @bold.setter
     def bold(self, value: bool | None):

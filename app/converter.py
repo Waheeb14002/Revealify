@@ -1,143 +1,102 @@
-from pptx import Presentation
-from pptx.enum.shapes import PP_PLACEHOLDER
-from .slide import HTMLSlide, ParagraphContent, BulletNode, BulletTreeContent, TableContent
-from .xml_parser import XmlParser 
 import os
-
-
-# Define what placeholder types are considered slide titles
-TITLE_PLACEHOLDERS = {PP_PLACEHOLDER.TITLE, PP_PLACEHOLDER.CENTER_TITLE}
+from .slide import HTMLSlide, TitleShape, TextShape, ParagraphContent, BulletTreeContent, BulletNode, TableContent
+from .pptx_parser import PptxParser
 
 
 class SlideConverter:
-    """
-    Converts a PowerPoint (.pptx) file into Reveal.js-compatible slides.
-    Uses both pptx library and XML analysis for reliable content type detection.
-    """
 
     def __init__(self, pptx_path):
         self.pptx_path = pptx_path
         self.slides = []
 
     def convert(self):
-        # Load pptx and extract XML
-        prs = Presentation(self.pptx_path)
-        try:
-            xml_parser = XmlParser(self.pptx_path)
-        except Exception as e:
-            raise RuntimeError(f"Failed to initialize XML parser: {e}")
-
-        for i, pptx_slide in enumerate(prs.slides):
-            # Extract rich paragraph data from XML for slide i
-            try:
-                shapes = xml_parser.get_slide_shapes(i)
-            except Exception as e:
-                raise RuntimeError(f"Failed to extract paragraphs from slide {i}: {e}")
-
-            """ 
-            # Print structured data for visual debugging
-            import json
-            print(f"\n✅ Slide {i} Paragraphs Summary:")
-            print(json.dumps(shapes, indent=4))
-            continue # skip conversion/rendering for now """
-
-            try:
-                slide = self.convert_slide(pptx_slide, shapes)
-            except Exception as e:
-                raise RuntimeError(f"Failed to convert slide {i}: {e}")
+        parser = PptxParser(self.pptx_path)
+        for i in range(parser.get_slide_count()):
+            slide_shapes = parser.get_slide_shapes(i)
+            slide = self.convert_slide(slide_shapes)
             self.slides.append(slide)
+       
 
-    def convert_slide(self, pptx_slide, shapes_data):
+    def convert_slide(self, shapes_data):
         """
-        Given a pptx slide and pre-parsed shapes metadata,
-        group and convert it into HTML content using Reveal.js structure.
+        Given pre-parsed shapes metadata from XML, group and convert content
+        into Reveal.js-compatible HTML slide structure.
         """
-
-        title_runs = ""
+        title_shapes = []
         contents = []
 
-        # Get the title from parsed XML data
-        if shapes_data and shapes_data[0].get("title", False):
-            title_runs = shapes_data[0]["runs"]
-            shapes_data = shapes_data[1:] # remove it from body content    
+        for shape in shapes_data:
+            
+            
+            if shape["type"] == "table":
+                contents.append(TableContent(shape))
+                continue
 
-        # Group and convert content with buffer + flush method
-        buffer = []
-        last_type = None
+            if shape["title"] in ("title", "ctrTitle", "subTitle"):
+                para = next((c for c in shape["contents"] if c["type"] == "paragraph"), None)
+                if para:
+                    title_shapes.append(TitleShape(shape, para["runs"], para.get("alignment")))
+                continue
 
-        def flush_buffer():
-            nonlocal buffer, last_type
-            if not buffer:
-                return
-            if last_type in ("bullet", "numbered"):
-                ordered = (last_type == "numbered")
-                root = BulletNode("ROOT", -1, ordered) # dummy root to hold top level bullets
-                stack = [root]
-                for item in buffer:
-                    node = BulletNode(item["runs"], item["level"], ordered, item["alignment"])
-                    while stack and stack[-1].level >= node.level:
-                        stack.pop()
-                    stack[-1].add_child(node)
-                    stack.append(node)
-                contents.append(BulletTreeContent(root))
-            elif last_type == "paragraph":
-                for item in buffer:
-                    contents.append(ParagraphContent(item["runs"], item["alignment"]))
-            buffer.clear()
+            if shape["type"] == "text" and shape["title"] is None:
 
-        # Process all items from XML
-        for item in shapes_data:
-            # ✅ Handle table content directly
-            if item["type"] == "table":
-                flush_buffer()  # flush pending bullets/paragraphs first
-                contents.append(TableContent(rows=item["rows"],
-                                             x_percent=item.get("x_percent"),
-                                             y_percent=item.get("y_percent"),
-                                             width_percent=item.get("width_percent"),
-                                             height_percent=item.get("height_percent"),
-                                             col_widths=item.get("col_widths")
-                                            ))
-                last_type = None  # reset buffer tracking
-                continue # skip rest of this loop
+                buffer = []
+                last_type = None
+                textShape_content = []
 
-            # 🔁 Handle textual content (paragraphs/bullets)
-            elif item["type"] == "text":
+                def flush():
+                    nonlocal buffer, last_type
+                    if not buffer:
+                        return
+                    if last_type in ("bullet", "numbered"):
+                        ordered = (last_type == "numbered")
+                        root = BulletNode("ROOT", -1, ordered)
+                        stack = [root]
+                        for item in buffer:
+                            node = BulletNode(item["runs"], item["level"], ordered, item["alignment"])
+                            while stack and stack[-1].level >= node.level:
+                                stack.pop()
+                            stack[-1].add_child(node)
+                            stack.append(node)
+                        textShape_content.append(BulletTreeContent(root))
+                    elif last_type == "paragraph":
+                        for item in buffer:
+                            textShape_content.append(ParagraphContent(item["runs"], item["alignment"]))
+                    buffer.clear()
+                    last_type = None
 
-                bullet_type = item["bullet_type"]
+                for block in shape["contents"]:
+                    if block["type"] not in ("paragraph", "bullet"):
+                        continue
 
-                if bullet_type == "number":
-                    current_type = "numbered"
-                elif bullet_type == "bullet":
-                    current_type = "bullet"
-                else:
-                    current_type = "paragraph"
+                    bullet_type = block.get("bullet_type")
+                    current_type = (
+                        "numbered" if bullet_type == "number"
+                        else "bullet" if bullet_type == "bullet"
+                        else "paragraph"
+                    )
 
-                if last_type is None or current_type == last_type:
-                    buffer.append({
-                        "text": item["text"],
-                        "runs": item.get("runs", []),
-                        "level": item["level"],
-                        "alignment": item.get("alignment", "left")
-                    })
-                    last_type = current_type
-                else:
-                    flush_buffer()
-                    buffer = [{
-                        "text": item["text"],
-                        "runs": item.get("runs", []),
-                        "level": item["level"],
-                        "alignment": item.get("alignment", "left")
-                    }]
-                    last_type = current_type
-            else: # unsupported types yet to come
-                pass
+                    if last_type is None or last_type == current_type:
+                        buffer.append(block)
+                        last_type = current_type
+                    else:
+                        flush()
+                        buffer = [block]
+                        last_type = current_type
 
-        flush_buffer()  # Final flush at end
+                flush()
 
-        slide = HTMLSlide(title_runs=title_runs, transition="fade")
-        for content in contents:
-            slide.add_content(content)
+                # textshape_content is a list of parag. and lists objects
+                contents.append(TextShape(shape, textShape_content))
+
+
+        slide = HTMLSlide(title_shapes, transition="fade")
+        for shape in contents:
+            slide.add_shape(shape)
+
+        
         return slide
+    
 
     def save(self, output_file="slides.html"):
         """
