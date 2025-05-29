@@ -13,6 +13,9 @@
     padding: 0.5em;
     word-wrap: break-word;
     white-space: normal;
+
+    /*overflow-wrap: break-word;
+    word-break: break-word;*/
 }
 
 /* 🧾 Optional: center-align headers */
@@ -69,8 +72,82 @@
 /*
     This allows inner <p style="text-align:xxxx;"> 
     to control alignment fully.
-*/
+
 .r-fit-text { 
     text-align: inherit !important;
+}*/
+
+/* ✅ Auto-fit text content inside positioned shape */
+/* ✅ Auto-fit text content inside positioned shape *//*
+.title-shape {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
 }
+
+.title-shape h1,
+.title-shape h2,
+.title-shape h3,
+.title-shape h4,
+.title-shape h5,
+.title-shape h6 {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  font-size: clamp(1.4rem, 2.5vw, 3rem);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.text-shape {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+}
+
+.text-shape * {
+  font-size: clamp(0.9rem, 1.5vw, 2rem);
+  line-height: 1.3;
+  margin: 0.2em 0;
+}*/
+
+.title-shape, .text-shape {
+  word-break: break-word;
+  box-sizing: border-box;
+
+  white-space: normal !important;
+  word-break: break-word;
+  overflow-wrap: break-word;
+
+}
+
+.reveal .slides section.present {
+  position: relative !important;   /* Makes child absolute positioning relative to slide */
+  transform: none !important; /* Disables Reveal.js transform that breaks coords */
+  min-height: 760px;
+  min-width: 900px;
+  height: 100%;
+  width: 100%;
+}
+
+
+
+section {
+  border: 3px dashed red !important;
+  min-height: 600px !important; 
+  min-width: 900px !important;
+}
+.title-shape, .text-shape {
+  border: 2px solid blue !important;
+  background: rgba(0,0,255,0.04) !important;
+}
+
+
+ 
+
+
+
   

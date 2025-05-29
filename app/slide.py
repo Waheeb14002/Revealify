@@ -15,66 +15,25 @@ class HTMLSlide:
     Represents one full Reveal.js slide.
     Contains a title and ordered list of content blocks.
     """
-    def __init__(self, title_runs="", transition="fade"):
-        self.title_runs = title_runs or []
+    def __init__(self, title_shapes=None, transition="fade"):
+        self.title_shapes = title_shapes or None
         self.transition = transition
-        self.contents = []
+        self.shapes = []
 
-    def add_content(self, content):
-        self.contents.append(content)
+    def add_shape(self, shape):
+        self.shapes.append(shape)
 
     def to_html(self):
-        html = f"<section data-transition='{self.transition}'>\n"
+        html = f'''<section style="position: relative;" data-transition="{self.transition}" 
+                    width:100%; height:100%;>\n'''
 
-        # Detect if table exists in this slide's contents so we make title bit smaller
-        has_table = any(isinstance(content, TableContent) for content in self.contents)
+        if self.title_shapes:
+            for title in self.title_shapes:
+                html += title.to_html()
 
-        # Detect if any non-table text exists
-        has_non_table = any(not isinstance(content, TableContent) for content in self.contents)
+        for shape in self.shapes:
+            html += shape.to_html()
 
-        # Start r-fit-text div only for text content
-        # ensures to fit bit larger slides, anyways its not common to make extra large pp slides
-        if has_non_table:
-            html += '  <div class="r-fit-text">\n'
-
-        if self.title_runs:
-            # If table exists, make title smaller automatically (use h3 or h4)
-            title_tag = "h4" if has_table else "h2"
-            html += f"  <{title_tag}>"
-            for run in self.title_runs:
-                text = run["text"]
-                # Wrap with link if hyperlink is present
-                if run.get("hyperlink"):
-                    url = run["hyperlink"]
-                    text = f"<a href='{url}' target='_blank'>{text}</a>"
-                # Apply styling
-                if run.get("bold"):
-                    text = f"<strong>{text}</strong>"
-                if run.get("italic"):
-                    text = f"<em>{text}</em>"
-                if run.get("underline"):
-                    text = f"<u>{text}</u>"
-                if run.get("strikethrough"):
-                    text = f"<span style='text-decoration: line-through;'>{text}</span>"
-                html += text
-            html += f"</{title_tag}>\n"
-
-        # Handle contents differently, cus we put scroller for tables
-        for content in self.contents:
-            if isinstance(content, TableContent):
-                if has_non_table:
-                    # Close fit-text div BEFORE table
-                    html += '  </div>\n'  
-
-                html += content.to_html() + "\n"
-
-                if has_non_table:
-                    # Reopen fit-text div AFTER table (if we expect more text below)
-                    html += '<div class="r-fit-text">\n'
-            else:
-                html += content.to_html() + "\n"
-        if has_non_table:
-            html += '</div>\n'  # Final closing of r-fit-text
         html += "</section>\n"
         return html
 
@@ -91,19 +50,30 @@ class ParagraphContent(SlideContent):
         html = f"  <p class='fragment' style='text-align:{self.alignment};'>\n"
         for run in self.runs:
             text = run["text"]
-            # Wrap with link if hyperlink is present
-            if run.get("hyperlink"):
-                url = run["hyperlink"]
-                text = f"<a href='{url}' target='_blank'>{text}</a>"
-            # Apply styling
+
+            # # Apply tag-based styling for bold/italic/underline
             if run.get("bold"):
                 text = f"<strong>{text}</strong>"
             if run.get("italic"):
                 text = f"<em>{text}</em>"
             if run.get("underline"):
                 text = f"<u>{text}</u>"
+
+            # Build the CSS style string for this run
+            style = ""
+            if run.get("font_size_px"):
+                style += f"font-size:{run['font_size_px']:.2f}px;"
             if run.get("strikethrough"):
-                text = f"<span style='text-decoration: line-through;'>{text}</span>"
+                style += "text-decoration: line-through;"
+            # Wrap in a span for style (only if style string is not empty)
+            if style:
+                text = f"<span style='{style}'>{text}</span>"
+
+            # Wrap with link if hyperlink is present (is always outmost)
+            if run.get("hyperlink"):
+                url = run["hyperlink"]
+                text = f"<a href='{url}' target='_blank'>{text}</a>"
+
             html += text + "\n"
         html += "  </p>\n"
         return html
@@ -127,19 +97,29 @@ class BulletNode(SlideContent):
         html = f"<li class='fragment' style='text-align:{self.alignment};'>\n"
         for run in self.runs:
             text = run["text"]
-            # Wrap with link if hyperlink is present
-            if run.get("hyperlink"):
-                url = run["hyperlink"]
-                text = f"<a href='{url}' target='_blank'>{text}</a>"
-            # Apply styling
+            # # Apply tag-based styling for bold/italic/underline
             if run.get("bold"):
                 text = f"<strong>{text}</strong>"
             if run.get("italic"):
                 text = f"<em>{text}</em>"
             if run.get("underline"):
                 text = f"<u>{text}</u>"
+
+            # Build the CSS style string for this run
+            style = ""
+            if run.get("font_size_px"):
+                style += f"font-size:{run['font_size_px']:.2f}px;"
             if run.get("strikethrough"):
-                text = f"<span style='text-decoration: line-through;'>{text}</span>"
+                style += "text-decoration: line-through;"
+            # Wrap in a span for style (only if style string is not empty)
+            if style:
+                text = f"<span style='{style}'>{text}</span>"
+
+            # Wrap with link if hyperlink is present
+            if run.get("hyperlink"):
+                url = run["hyperlink"]
+                text = f"<a href='{url}' target='_blank'>{text}</a>"
+
             html += text
 
         if self.children:
@@ -170,31 +150,38 @@ class TableContent(SlideContent):
     x/y: Top-left corner (in % of slide width/height)
     width/height: Size of the table (in % of slide width/height)
     """
-    def __init__(self, rows, x_percent=None, y_percent=None, width_percent=None, height_percent=None,col_widths=None):
-        self.rows = rows  # List of rows, each row is a list of cell texts
-        self.x_percent = x_percent
-        self.y_percent = y_percent
-        self.width_percent = width_percent
-        self.height_percent = height_percent
-        self.col_widths = col_widths or []
+    def __init__(self, shape_dict):
+        self.rows = shape_dict["rows"]  # List of rows, each row is a list of cell texts
+        self.x_percent = shape_dict["x_percent"]
+        self.y_percent = shape_dict["y_percent"]
+        self.width_percent = shape_dict["width_percent"]
+        self.height_percent = shape_dict["height_percent"]
+        self.col_widths = shape_dict["col_widths"] or []
 
         
     def to_html(self):
+
+        top = self.y_percent
+        left = self.x_percent
+        width = self.width_percent
+        height = self.height_percent
         # Create absolute-positioned container using percentages
         style = ""
         if all(v is not None for v in [self.x_percent, self.y_percent, self.width_percent, self.height_percent]):
             style = (
                 f"position:absolute;"
-                f" top:{self.y_percent:.2f}%;"
-                f" left:{self.x_percent:.2f}%;"
-                f" width:{self.width_percent:.2f}%;"
-                f" height:{self.height_percent:.2f}%;"
+                f" top:{top:.2f}%;"
+                f" left:{left:.2f}%;"
+                f" width:{width:.2f}%;"
+                f" height:{height:.2f}%;"
             )
+        ##############
         #<div style="overflow-x: auto; overflow-y: auto; max-height: 100%;">
-        html = f'''
-        <div style="{style}; "\n>
+        """html = f'''
+        <div style="{style} "\n>
 
-        '''
+        ''' """
+        #############
         html = f'<div style="{style}">\n'
 
         html += '<table class="fragment auto-fit">\n'
@@ -209,8 +196,133 @@ class TableContent(SlideContent):
         for i, row in enumerate(self.rows):
             tag = "th" if i == 0 else "td"
             html += "<tr>"
-            for cell in row:
-                html += f"<{tag}>{cell}</{tag}> "
+            for cell_runs in row:
+                html += f"<{tag}>"
+                for run in cell_runs:
+                    text = run["text"]
+                    # # Apply tag-based styling for bold/italic/underline
+                    if run.get("bold"):
+                        text = f"<strong>{text}</strong>"
+                    if run.get("italic"):
+                        text = f"<em>{text}</em>"
+                    if run.get("underline"):
+                        text = f"<u>{text}</u>"
+
+                    # Build the CSS style string for this run
+                    style = ""
+                    if run.get("font_size_px"):
+                        style += f"font-size:{run['font_size_px']:.2f}px;"
+                    if run.get("strikethrough"):
+                        style += "text-decoration: line-through;"
+                    # Wrap in a span for style (only if style string is not empty)
+                    if style:
+                        text = f"<span style='{style}'>{text}</span>"
+
+                    # Wrap with link if hyperlink is present
+                    if run.get("hyperlink"):
+                        url = run["hyperlink"]
+                        text = f"<a href='{url}' target='_blank'>{text}</a>"
+                    html += text
+                html += f"</{tag}>"
             html += "</tr>\n"
         html += "</table></div>\n"
         return html
+
+
+class TextShape(SlideContent):
+    def __init__(self, shape_dict, contents):
+        
+        self.x_percent = shape_dict["x_percent"]
+        self.y_percent = shape_dict["y_percent"]
+        self.width_percent = shape_dict["width_percent"]
+        self.height_percent = shape_dict["height_percent"]
+        self.contents = contents  # list of ParagraphContent / BulletTreeContent
+
+    def to_html(self):
+
+        top = max(self.y_percent, 0)
+        left = max(self.x_percent, 0)
+        width = min(self.width_percent, 100)
+        height = min(self.height_percent, 100)
+        style = (
+            f"position:absolute;"
+            f" top:{top:.2f}%;"
+            f" left:{left:.2f}%;"
+            f" width:{width:.2f}%;"
+            f" height:{height:.2f}%;"
+        )
+
+        # Outer container layout
+        html = f'<div class="text-shape" style="{style}">\n'
+
+        for content in self.contents:
+            html += content.to_html()
+
+        html += '</div>\n'
+        return html
+
+
+
+class TitleShape(SlideContent):
+    def __init__(self, shape_dict, title_runs, align):
+        
+        self.x_percent = shape_dict["x_percent"]
+        self.y_percent = shape_dict["y_percent"]
+        self.width_percent = shape_dict["width_percent"]
+        self.height_percent = shape_dict["height_percent"]
+        self.title_type = shape_dict.get("title", None)  # 'ctrTitle', 'title', 'subTitle'
+        self.content = title_runs 
+        self.alignment = align
+
+    def to_html(self):
+        top = max(self.y_percent, 0)
+        left = max(self.x_percent, 0)
+        width = min(self.width_percent, 100)
+        height = min(self.height_percent, 100)
+        style = (
+            f"position:absolute;"
+            f" top:{top:.2f}%;"
+            f" left:{left:.2f}%;"
+            f" width:{width:.2f}%;"
+            f" height:{height:.2f}%;"
+        )
+
+        title = self.title_type
+        tag = "h3" if title in ("ctrTitle", "title") else "h4"
+        align = self.alignment
+
+        html = f'<div class="title-shape fit-content" style="{style}">\n'
+        html += f'<{tag} style="text-align:{align}; max-height:{height:.2f}%;" class="fit-text">'
+
+        for run in self.content:
+            text = run["text"]
+            # # Apply tag-based styling for bold/italic/underline
+            if run.get("bold"):
+                text = f"<strong>{text}</strong>"
+            if run.get("italic"):
+                text = f"<em>{text}</em>"
+            if run.get("underline"):
+                text = f"<u>{text}</u>"
+
+            # Build the CSS style string for this run
+            style = ""
+            if run.get("font_size_px"):
+                style += f"font-size:{run['font_size_px']:.2f}px;"
+            if run.get("strikethrough"):
+                style += "text-decoration: line-through;"
+            # Wrap in a span for style (only if style string is not empty)
+            if style:
+                text = f"<span style='{style}'>{text}</span>"
+
+            # Wrap with link if hyperlink is present
+            if run.get("hyperlink"):
+                url = run["hyperlink"]
+                text = f"<a href='{url}' target='_blank'>{text}</a>"
+
+            html += text
+
+        html += f"</{tag}>\n</div>\n"
+        return html
+
+
+

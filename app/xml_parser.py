@@ -278,6 +278,10 @@ class XmlParser:
         return 0
 
 
+    def get_slide_count(self):
+        return len(self.slide_data)
+    
+
     def get_slide_shapes(self, slide_index):
         """
         Returns the list of parsed shapes for a given slide index.
