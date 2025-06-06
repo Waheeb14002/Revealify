@@ -4,7 +4,7 @@ This project converts `.pptx` PowerPoint slides into [Reveal.js](https://revealj
 
 ---
 
-## ✨ Features
+## ✅ Features
 
 | Feature                                                               | Status         |
 |-----------------------------------------------------------------------|----------------|
