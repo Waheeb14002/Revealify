@@ -7,7 +7,7 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ---
 
-## ✨ Features
+## ✅ Features
 
 | Feature                                                               | Status         |
 |-----------------------------------------------------------------------|----------------|
