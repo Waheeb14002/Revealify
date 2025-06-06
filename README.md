@@ -4,18 +4,20 @@ This project converts `.pptx` PowerPoint slides into [Reveal.js](https://revealj
 
 ---
 
-## ✅ Features
+## 🟢 Features
 
-| Feature                                                               | Status       |
-|-----------------------------------------------------------------------|--------------|
-| ✅ Full web application (Flask)                                      | Implemented  |
-| ✅ Modern Flask web UI with Theme selector (Reveal.js)               | Implemented  |
-| ✅ Upload and convert `.pptx`                                        | Implemented  |
-| ✅ Fragments (click-to-reveal)                                       | Implemented  |
-| ✅ Slide titles & text parsing                                       | Implemented  |
-| ✅ Bullet points + nesting                                           | Implemented  |
-| ✅ Table content support (text only)                                 | Implemented  |
-| ✅ Styled inline text (bold, italic, underline, strikethrough)       | Implemented  |
+| Feature                                                               | Status         |
+|-----------------------------------------------------------------------|----------------|
+| 🟢 Full web application (Flask)                                        | ✅ Implemented |
+| 🟢 Modern Flask web UI with Theme selector (Reveal.js)                 | ✅ Implemented |
+| 🟢 Upload and convert `.pptx`                                          | ✅ Implemented |
+| 🟢 Fragments (click-to-reveal)                                         | ✅ Implemented |
+| 🟢 Slide titles & text parsing                                         | ✅ Implemented |
+| 🟢 Bullet points + nesting                                             | ✅ Implemented |
+| 🟢 Table content support (text only)                                   | ✅ Implemented |
+| 🟢 Styled inline text (bold, italic, underline, strikethrough, hyperlinks) | ✅ Implemented |
+| 🟢 Images/Pictures extraction                                          | ✅ Implemented |
+
 
 
 ## 📂 Example PowerPoint File
