@@ -61,8 +61,8 @@ class ParagraphContent(SlideContent):
 
             # Build the CSS style string for this run
             style = ""
-            if run.get("font_size_px"):
-                style += f"font-size:{run['font_size_px']:.2f}px;"
+            #if run.get("font_size_px"):
+            #    style += f"font-size:{run['font_size_px']:.2f}px;"
             if run.get("strikethrough"):
                 style += "text-decoration: line-through;"
             # Wrap in a span for style (only if style string is not empty)
@@ -107,8 +107,8 @@ class BulletNode(SlideContent):
 
             # Build the CSS style string for this run
             style = ""
-            if run.get("font_size_px"):
-                style += f"font-size:{run['font_size_px']:.2f}px;"
+            #if run.get("font_size_px"):
+            #    style += f"font-size:{run['font_size_px']:.2f}px;"
             if run.get("strikethrough"):
                 style += "text-decoration: line-through;"
             # Wrap in a span for style (only if style string is not empty)
@@ -210,8 +210,8 @@ class TableContent(SlideContent):
 
                     # Build the CSS style string for this run
                     style = ""
-                    if run.get("font_size_px"):
-                        style += f"font-size:{run['font_size_px']:.2f}px;"
+                    #if run.get("font_size_px"):
+                    #    style += f"font-size:{run['font_size_px']:.2f}px;"
                     if run.get("strikethrough"):
                         style += "text-decoration: line-through;"
                     # Wrap in a span for style (only if style string is not empty)
@@ -253,7 +253,7 @@ class TextShape(SlideContent):
         )
 
         # Outer container layout
-        html = f'<div class="text-shape" style="{style}">\n'
+        html = f'<div class="text-shape" style="{style} font-size:30px;">\n'
 
         for content in self.contents:
             html += content.to_html()
@@ -325,4 +325,34 @@ class TitleShape(SlideContent):
         return html
 
 
+
+class ImageContent(SlideContent): 
+    """
+    Represents an image block, absolutely positioned, with size as percent of slide.
+    """
+    def __init__(self, shape_dict):
+        self.x_percent = shape_dict["x_percent"]
+        self.y_percent = shape_dict["y_percent"]
+        self.width_percent = shape_dict["width_percent"]
+        self.height_percent = shape_dict["height_percent"]
+        self.image_path = shape_dict["image_path"]
+        self.alt = shape_dict.get("alt", "Slide Image")
+
+    def to_html(self):
+        # Compose the style for the div container
+        style = (
+            f"position:absolute;"
+            f" top:{self.y_percent:.2f}%;"
+            f" left:{self.x_percent:.2f}%;"
+            f" width:{self.width_percent:.2f}%;"
+            f" height:{self.height_percent:.2f}%;"
+        )
+        # Image path is already relative (e.g., "images/slide1_img1.png")
+        html = (
+            f'<div class="image-shape" style="{style}">\n'
+            f'  <img src="{self.image_path}" '
+            f'style="width:100%; height:100%; object-fit:contain;" alt="{self.alt}">\n'
+            f'</div>\n'
+        )
+        return html
 

@@ -1,7 +1,7 @@
 /* 📄 Make tables clean and responsive */
 .reveal table {
     width: 100%;               /* Stretch table to full slide width */
-    table-layout: auto;        /* Let columns size based on content */
+    height:100%;
     font-size: 0.8em;          /* Slightly smaller to help fit */
     border-collapse: collapse; /* Clean, no gaps */
     margin: 1em 0;
@@ -121,13 +121,15 @@
   white-space: normal !important;
   word-break: break-word;
   overflow-wrap: break-word;
+  margin: 0;
+  padding: 0;
 
 }
 
 .reveal .slides section.present {
   position: relative !important;   /* Makes child absolute positioning relative to slide */
   transform: none !important; /* Disables Reveal.js transform that breaks coords */
-  min-height: 760px;
+  min-height: 760px; /*change to rem or em*/
   min-width: 900px;
   height: 100%;
   width: 100%;
@@ -145,6 +147,9 @@ section {
   background: rgba(0,0,255,0.04) !important;
 }
 
+.reveal ol, .reveal ul {
+  display: block;
+}
 
  
 

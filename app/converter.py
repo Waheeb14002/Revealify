@@ -1,5 +1,9 @@
 import os
-from .slide import HTMLSlide, TitleShape, TextShape, ParagraphContent, BulletTreeContent, BulletNode, TableContent
+from .slide import (
+    HTMLSlide, TitleShape,TextShape, 
+    ParagraphContent, BulletTreeContent, BulletNode, 
+    TableContent, ImageContent 
+)
 from .pptx_parser import PptxParser
 
 
@@ -9,7 +13,7 @@ class SlideConverter:
         self.pptx_path = pptx_path
         self.slides = []
 
-    def convert(self):
+    def convert(self): 
         parser = PptxParser(self.pptx_path)
         for i in range(parser.get_slide_count()):
             slide_shapes = parser.get_slide_shapes(i)
@@ -31,6 +35,10 @@ class SlideConverter:
             if shape["type"] == "table":
                 contents.append(TableContent(shape))
                 continue
+            
+            if shape["type"] == "image":
+                contents.append(ImageContent(shape))
+                continue
 
             if shape["title"] in ("title", "ctrTitle", "subTitle"):
                 para = next((c for c in shape["contents"] if c["type"] == "paragraph"), None)
@@ -38,7 +46,7 @@ class SlideConverter:
                     title_shapes.append(TitleShape(shape, para["runs"], para.get("alignment")))
                 continue
 
-            if shape["type"] == "text" and shape["title"] is None:
+            elif shape["type"] == "text" and shape["title"] is None:
 
                 buffer = []
                 last_type = None
