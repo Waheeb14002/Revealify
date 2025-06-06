@@ -1,3 +1,4 @@
+import os
 from pptx import Presentation
 from pptx.oxml.ns import qn
 from pptx.enum.shapes import PP_PLACEHOLDER
@@ -96,6 +97,25 @@ class PptxParser:
                 table_data = self._parse_table(shape)
                 shape_obj["rows"] = table_data["rows"]
                 shape_obj["col_widths"] = table_data["col_widths"]
+                shapes.append(shape_obj)
+
+            # === Pictures ===
+            elif shape.shape_type == MSO_SHAPE_TYPE.PICTURE:
+                os.makedirs("static/images", exist_ok=True)
+                img = shape.image
+                ext = img.ext or "png"
+                image_bytes = img.blob  # The raw bytes of the image file
+                image_name = f"slide{slide_index+1}_img{len(shapes)+1}.{ext}"
+                image_path = os.path.join("static/images/", image_name)
+                # Save image to static/images/
+                with open(image_path, "wb") as f:
+                    f.write(image_bytes)
+                shape_obj["type"] = "image"
+                shape_obj["image_path"] = image_path
+                shape_obj["image_ext"] = ext
+                shape_obj["image_width_px"] = img.size[0]
+                shape_obj["image_height_px"] = img.size[1]
+                
                 shapes.append(shape_obj)
 
             # === Future: Add chart, image, etc. here ===

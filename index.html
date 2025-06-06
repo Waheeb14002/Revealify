@@ -23,33 +23,59 @@
     import Reveal from "/static/reveal.js/dist/reveal.esm.js";
     import RevealNotes from "/static/reveal.js/plugin/notes/notes.esm.js";
     
-   function fitTextToBox(element) {
+   function fitTextToBox(element, slideIdx) {
     let computedStyle = window.getComputedStyle(element);
-    let size = parseFloat(computedStyle.fontSize) || 24;
+    let size = parseFloat(computedStyle.fontSize) || 30;
     let originalSize = size;
     // Set min font size based on type
-    let minPx = element.classList.contains('title-shape') ? 20 : 16;
+    let minPx = element.classList.contains('title-shape') ? 20 : 14;
     //element.style.fontSize = size + "px";
     let attempts = 0;
 
+
+    // Log initial metrics
+    console.log(
+        `[fitTextToBox: start] (slide ${slideIdx})`,
+        `class:`, element.className,
+        `original font-size:`, originalSize,
+        `computed font-size:`, computedStyle.fontSize,
+        `min font-size:`, minPx,
+        `offsetWidth:`, element.clientWidth,
+        `scrollWidth:`, element.scrollWidth,
+        `offsetHeight:`, element.clientHeight,
+        `scrollHeight:`, element.scrollHeight
+    );
+
     // Only shrink if content doesn't fit
-    if (element.scrollHeight > element.offsetHeight || element.scrollWidth > element.offsetWidth) {
-      while ((element.scrollHeight > element.offsetHeight || element.scrollWidth > element.offsetWidth) && size > minPx) {
+    //if (element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth) {
+      while ((element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth) && size > minPx) {
         size -= 1;
         element.style.fontSize = size + "px";
         attempts++;
+
+        console.log(`font-size: ${size}, scrollHeight: ${element.scrollHeight}, clientHeight: ${element.clientHeight}`);
       }
-    }
+    //}
     // Log info
     console.log(
-      `fitTextToBox:`, 
-      element.className, 
-      `→ final font-size: ${size}px (min: ${minPx}px, started at ${originalSize}px, attempts: ${attempts})`
+        `[fitTextToBox]: (slide ${slideIdx})`, 
+        element.className, 
+        `→ final font-size: ${size}px (started at ${originalSize}px, attempts: ${attempts})`
     );
+
   }
     
     function fitAllTextShapes() {
-      document.querySelectorAll('.text-shape, .title-shape').forEach(el => fitTextToBox(el));
+      // fit elements inside the current visible section
+      // const currentSlide = document.querySelector('.slides section.present');
+      // if (!currentSlide) 
+      //   return;
+      // document.querySelectorAll('.text-shape, .title-shape').forEach(el => fitTextToBox(el));
+    const currentSlide = document.querySelector('.slides section.present');
+    if (!currentSlide) return;
+    const allSlides = Array.from(document.querySelectorAll('.slides section'));
+    const slideIdx = allSlides.indexOf(currentSlide);
+    currentSlide.querySelectorAll('.text-shape, .title-shape').forEach(el => fitTextToBox(el, slideIdx));
     }
     
     fetch("/static/slides.html")
@@ -65,10 +91,10 @@
         });
 
         // Run after Reveal is fully loaded
-        deck.on('ready', fitAllTextShapes);
+        deck.on('ready',  () => setTimeout(fitAllTextShapes, 100));
 
         // On every slide change
-        deck.on('slidechanged', fitAllTextShapes);
+        deck.on('slidechanged', () => setTimeout(fitAllTextShapes, 100));
       });
   </script>
 </body>

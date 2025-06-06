@@ -45,7 +45,7 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ### Week 2 — ⚙️ Environment Setup & Minimum Viable Product (MVP) Script (Mar 31–Apr 7)
 
-**Hours Logged:** ~32 hours
+**Hours Logged:** ~15 hours
 
 - Set up the full development environment: Python `venv`, `requirements.txt`, `.gitignore`, and folder layout  
 - Created a basic script to extract text from `.pptx` using `python-pptx`  
@@ -61,7 +61,7 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ### Week 3 — 📄 Refactoring to OOP & Project Structure (Apr 8–Apr 14)
 
-**Hours Logged:** ~28 hours
+**Hours Logged:** ~15 hours
 
 - Refactored procedural script into a modular object-oriented design
 - Introduced `SlideConverter`, `HTMLSlide`, and `SlideContent` classes
@@ -76,9 +76,9 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ### Week 4 — 🌐 Flask Web App & UI Development (Apr 15–Apr 21)
 
-**Hours Logged:** ~40 hours
+**Hours Logged:** ~15 hours
 
-> **Apr 21:** Heavy frontend debugging and refinement (~12 hours)
+> **Apr 21:** Heavy frontend debugging and refinement (~ 6+ hours)
 
 - Learned Flask fundamentals: routing, templates, static file handling, and `render_template` usage  
 - Explored Flask project structure conventions and set up a scalable layout  
@@ -99,7 +99,7 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ### Week 5 — 📊 Table Support & Final Reveal.js Styling (Apr 21–Apr 28)
 
-**Hours Logged:** ~20 hours
+**Hours Logged:** ~15 hours
 
 - Extended the XML parser to support tables using `graphicFrame` + `<a:tbl>`  
 - Maintained slide content ordering to include both paragraphs and tables without breaking sequence  
@@ -116,7 +116,7 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 - Introduced <div class="r-fit-text"> wrapping for better dynamic fitting of text contents inside slides
 - Refined scrolling behavior for wide tables with overflow-x/overflow-y: auto inside slides
 
-> **Heavy UI trial-and-error and testing** contributed to ~20 hours of focused work across multiple debugging sessions.
+> **Heavy UI trial-and-error and testing** contributed to ~15 hours of focused work across multiple debugging sessions.
 ---
 
 ### Week 6 — ✨ Rich Text Styling & Table Dimension Precision (Apr 29–May 5)
@@ -134,16 +134,35 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ---
 
-## 📅 Daily Breakdown Summary (Mar 24–May 05)
+### Week 7 — 🔄 Switched to python-pptx & Rich Text Table Cells (May 6–May 12)
 
-> Estimated average: ~5-6 hours/day, increasing toward the later stages
+**Hours Logged:** ~12 hours
+
+- Started over, transitioning from manual XML parsing to using the `python-pptx` library, with modifications for advanced extraction when needed  
+- Added robust support for text shape extraction and absolute positioning, including precise `x`, `y`, `width`, and `height` as percentages of slide dimensions  
+- After implementing exact positioning, I encountered a bug where shapes were overlapping and collapsing for some reason. Spent many hours trying to figure out what was causing shapes to overlap; eventually I resolved it. 
+- Extended rich text styling to table cells, supporting bold, italic, underline, and strikethrough within table content  
+- Developed and integrated JavaScript font fitting logic to dynamically shrink text within text shapes until it fits the bounding box  
+- Encountered a bug where `.scrollHeight` remained constant despite font shrinking, causing text to hit the minimum font-size rather than fit naturally; this issue remains unresolved  
+- Enhanced overall code structure for future extensibility and easier handling of Reveal.js HTML rendering  
+
+---
+
+
+## 📅 Daily Breakdown Summary (Mar 24–May 12)
+
+> Estimated average: ~4-5 hours/day, increasing toward the later stages
 
 - Early days focused on XML parsing and debugging, PowerPoint structure, and content classification (~4–5 hours/day)  
 - Mid-phase included refactoring into OOP, edge case handling and debugging , and fragment logic in Reveal.js  
-- Recent days (Week 4) were heavier (~7–12 hours/day) due to Flask integration, UI design, and extensive debugging of styling and rendering logic  
+- Recent days (Week 4) were heavier due to Flask integration, UI design, and extensive debugging of styling and rendering logic  
 - Progress has been consistently iterative, with code improvements, testing cycles, and user experience polish across both backend and frontend sides
+- Heavy trial-and-error and debugging accompanied nearly every new conversion feature, with multiple sessions often requiring several focused hours each to resolve edge cases and ensure reliable results.
+...makes it clear that not all hours were “pure coding”—lots went into thoughtful debugging and quality.
 
-Total time logged so far: **140 hours / 150 hours**
+Total time logged so far: **100 hours / 150 hours**
+
+
 
 ---
  

@@ -15,6 +15,11 @@ node_modules/
 # VS Code settings 
 #.vscode/
 
+# Ignore all files in static/images/
+static/images/*
+!static/images/.gitkeep
+
+
 # PowerPoint test files
 *.pptx
 
