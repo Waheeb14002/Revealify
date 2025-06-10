@@ -129,11 +129,12 @@
 .reveal .slides section.present {
   position: relative !important;   /* Makes child absolute positioning relative to slide */
   transform: none !important; /* Disables Reveal.js transform that breaks coords */
-  min-height: 760px; /*change to rem or em*/
-  min-width: 900px;
+  min-height: 760px; /* maybe change to rem or em*/
+  min-width: 1356px; /* 760 * (16/9) = 1355.555... */
   height: 100%;
   width: 100%;
 }
+
 
 
 
