@@ -64,7 +64,7 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ### Week 3 — 📄 Refactoring to OOP & Project Structure (Apr 8–Apr 14)
 
-**Hours Logged:** ~20 hours
+**Hours Logged:** ~22 hours
 
 - Refactored procedural script into a modular object-oriented design
 - Introduced `SlideConverter`, `HTMLSlide`, and `SlideContent` classes
@@ -79,7 +79,7 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ### Week 4 — 🌐 Flask Web App & UI Development (Apr 15–Apr 21)
 
-**Hours Logged:** ~15 hours
+**Hours Logged:** ~16 hours
 
 > **Apr 21:** Heavy frontend debugging and refinement (~ 6+ hours)
 
@@ -102,7 +102,7 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ### Week 5 — 📊 Table Support & Final Reveal.js Styling (Apr 21–Apr 28)
 
-**Hours Logged:** ~15 hours
+**Hours Logged:** ~16 hours
 
 - Extended the XML parser to support tables using `graphicFrame` + `<a:tbl>`  
 - Maintained slide content ordering to include both paragraphs and tables without breaking sequence  
@@ -124,7 +124,7 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ### Week 6 — ✨ Rich Text Styling & Table Dimension Precision (Apr 29–May 5)
 
-**Hours Logged:** ~15 hours
+**Hours Logged:** ~16 hours
 
 - Added support for **precise table positioning and dimensions**, including `x`, `y`, `width`, and `height` in percentage of slide size  
 - Extracted and applied **column widths** from `<a:tblGrid>` for more faithful Reveal.js table rendering  
@@ -139,8 +139,9 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ### Week 7 — 🔄 Switched to python-pptx & Rich Text Table Cells (May 6–May 12)
 
-**Hours Logged:** ~15 hours
+**Hours Logged:** ~20 hours
 
+- Spent significant time transitioning fully to the `python-pptx` library, reading through its official documentation and adapting my code to the new API and capabilities.
 - Started over, transitioning from manual XML parsing to using the `python-pptx` library, with modifications for advanced extraction when needed  
 - Added robust support for text shape extraction and absolute positioning, including precise `x`, `y`, `width`, and `height` as percentages of slide dimensions  
 - After implementing exact positioning, I encountered a bug where shapes were overlapping and collapsing for some reason. Spent many hours trying to figure out what was causing shapes to overlap; eventually I resolved it. 
@@ -179,7 +180,7 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 - Heavy trial-and-error and debugging accompanied nearly every new conversion feature, with multiple sessions often requiring several focused hours each to resolve edge cases and ensure reliable results.
 ...makes it clear that not all hours were “pure coding”—lots went into thoughtful debugging and quality.
 
-Total time logged so far: **140 hours / 150 hours**
+Total time logged so far: **150 hours / 150 hours**
 
 
 
