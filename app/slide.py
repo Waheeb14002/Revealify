@@ -61,8 +61,8 @@ class ParagraphContent(SlideContent):
 
             # Build the CSS style string for this run
             style = ""
-            #if run.get("font_size_px"):
-            #    style += f"font-size:{run['font_size_px']:.2f}px;"
+            if run.get("font_size_px"):
+                style += f"font-size:{run['font_size_px']:.2f}px;"
             if run.get("strikethrough"):
                 style += "text-decoration: line-through;"
             # Wrap in a span for style (only if style string is not empty)
@@ -107,8 +107,8 @@ class BulletNode(SlideContent):
 
             # Build the CSS style string for this run
             style = ""
-            #if run.get("font_size_px"):
-            #    style += f"font-size:{run['font_size_px']:.2f}px;"
+            if run.get("font_size_px"):
+                style += f"font-size:{run['font_size_px']:.2f}px;"
             if run.get("strikethrough"):
                 style += "text-decoration: line-through;"
             # Wrap in a span for style (only if style string is not empty)
@@ -210,8 +210,8 @@ class TableContent(SlideContent):
 
                     # Build the CSS style string for this run
                     style = ""
-                    #if run.get("font_size_px"):
-                    #    style += f"font-size:{run['font_size_px']:.2f}px;"
+                    if run.get("font_size_px"):
+                        style += f"font-size:{run['font_size_px']:.2f}px;"
                     if run.get("strikethrough"):
                         style += "text-decoration: line-through;"
                     # Wrap in a span for style (only if style string is not empty)

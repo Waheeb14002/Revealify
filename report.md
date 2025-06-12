@@ -33,7 +33,7 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ### Week 1 — ✨ Discovery Phase (Mar 24–Mar 30) 
 
-**Hours Logged:** ~20 hours
+**Hours Logged:** ~25 hours
 
 - Began with just the project idea: converting PowerPoint presentations into Reveal.js slides — had no clear implementation path at first.
 - Explored how web-based presentation frameworks work and why Reveal.js was a suitable choice.
@@ -48,7 +48,7 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ### Week 2 — ⚙️ Environment Setup & Minimum Viable Product (MVP) Script (Mar 31–Apr 7)
 
-**Hours Logged:** ~15 hours
+**Hours Logged:** ~20 hours
 
 - Set up the full development environment: Python `venv`, `requirements.txt`, `.gitignore`, and folder layout  
 - Created a basic script to extract text from `.pptx` using `python-pptx`  
@@ -64,7 +64,7 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ### Week 3 — 📄 Refactoring to OOP & Project Structure (Apr 8–Apr 14)
 
-**Hours Logged:** ~15 hours
+**Hours Logged:** ~20 hours
 
 - Refactored procedural script into a modular object-oriented design
 - Introduced `SlideConverter`, `HTMLSlide`, and `SlideContent` classes
@@ -124,7 +124,7 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ### Week 6 — ✨ Rich Text Styling & Table Dimension Precision (Apr 29–May 5)
 
-**Hours Logged:** ~8 hours
+**Hours Logged:** ~15 hours
 
 - Added support for **precise table positioning and dimensions**, including `x`, `y`, `width`, and `height` in percentage of slide size  
 - Extracted and applied **column widths** from `<a:tblGrid>` for more faithful Reveal.js table rendering  
@@ -139,7 +139,7 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ### Week 7 — 🔄 Switched to python-pptx & Rich Text Table Cells (May 6–May 12)
 
-**Hours Logged:** ~12 hours
+**Hours Logged:** ~15 hours
 
 - Started over, transitioning from manual XML parsing to using the `python-pptx` library, with modifications for advanced extraction when needed  
 - Added robust support for text shape extraction and absolute positioning, including precise `x`, `y`, `width`, and `height` as percentages of slide dimensions  
@@ -151,8 +151,24 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 
 ---
 
+### Week 8 — 📐 Reveal Slide Sizing, Text Font-Size, Image Support & Fine-Tuning (May 13–May 20)
 
-## 📅 Daily Breakdown Summary (Mar 24–May 12)
+**Hours Logged:** ~15 hours
+
+- Fixed Reveal.js slide dimensions to **dynamically match the PowerPoint aspect ratio (16:9)**, extracting and injecting the exact width/height from the `.pptx` file for faithful browser scaling and responsive presentation.
+- **Added robust image/picture extraction support:**  
+  - Extracted images from PowerPoint slides using `python-pptx`, saved to the static assets folder, and embedded into generated HTML with accurate order and placement.
+  - Ensured images display at their true size and exact slide position by outputting precise geometry from PowerPoint and mapping it to Reveal.js slides.
+- **Resolved a tricky image positioning bug** where images overlapped or appeared misaligned on exported slides, by removing/overriding certain Reveal.js theme CSS rules (e.g., `max-width: 95%`, `max-height: 95%`) that interfered with absolute sizing and positioning.
+- Cancelled problematic Reveal.js theme styles (specifically from `dracula.css`) that prevented images from matching the original PowerPoint layout.
+- **Implemented accurate font size support for text and table content:**  
+  - Parsed font size information from text shapes and table cells **when available in the current slide**, converting it to CSS pixel values for use in Reveal.js.
+  - Applied these font sizes inline, so rendered text closely matches the original `.pptx` where explicit font size was set.
+  - **Note:** Font size fallback to the slide master or layout defaults has not yet been implemented.
+
+---
+
+## 📅 Daily Breakdown Summary (Mar 24–May 20)
 
 > Estimated average: ~4-5 hours/day, increasing toward the later stages
 
@@ -163,7 +179,7 @@ Reveal.js is a popular HTML presentation framework that supports transitions, th
 - Heavy trial-and-error and debugging accompanied nearly every new conversion feature, with multiple sessions often requiring several focused hours each to resolve edge cases and ensure reliable results.
 ...makes it clear that not all hours were “pure coding”—lots went into thoughtful debugging and quality.
 
-Total time logged so far: **100 hours / 150 hours**
+Total time logged so far: **140 hours / 150 hours**
 
 
 
