@@ -86,8 +86,8 @@
         deck.initialize({
             slideNumber: 'c/t',
             scrollOverflow: true,
-            height: 760, /*in px, maybe change to rem or em*/
-            width: 1356, /* 760 * (16/9) = 1355.555... */
+            height: 760, /*reveal accepts in px, no rem or em*/
+            width: 1356, /* 760 * (16/9) = 1355.555...  Reveal.js automatically scales the slide to fit the browser window, maintaining the aspect ratio even if browser is resized*/
             disableLayout: false,
             plugins: [ RevealNotes ]  // ✅ Enable speaker notes plugin
         });
