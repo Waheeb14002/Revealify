@@ -243,3 +243,10 @@ project/
 ```
 
 ---
+
+## Acknowledgments
+
+> This project was developed as part of a B.Sc. degree in Computer Science at the University of Haifa.
+
+
+---
